@@ -1,9 +1,9 @@
-use serde::{Desrialize, Serialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 pub struct Task {
     pub id: i32,
     pub label: String,
-    pub date: Date,
+    pub date: String,
     pub done: bool,
 }

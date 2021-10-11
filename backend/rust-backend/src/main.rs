@@ -1,7 +1,6 @@
-mod route;
+use actix_web::{App, HttpRequest, HttpServer, Responder, web};
 
-
-use actix_web::{web, App, HttpRequest, HttpServer, Responder};
+mod model;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()>{

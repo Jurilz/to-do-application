@@ -3,12 +3,12 @@ use serde_json::json;
 use chrono;
 use crate::model::task::Task;
 
-#[get("/tasks/{id}")]
+#[get("/tasks")]
 async fn find_all() -> impl Responder {
     HttpResponse::Ok().json(vec![
         Task {
             id: 1,
-            label: String::from("Rust API"),
+            label: String::from("Rust API All Items"),
             date: chrono::offset::Local::now().to_string(),
             done: false
         }
@@ -28,5 +28,4 @@ async fn find() -> impl Responder {
 pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(find_all);
     config.service(find);
-
 }

@@ -1,14 +1,19 @@
-use actix_web::{App, HttpRequest, HttpServer, Responder, web};
-
 mod model;
+mod db;
+mod schema;
+
+use actix_web::{App, HttpRequest, HttpServer, Responder, web};
+use actix_web::web::route;
+use crate::model::route;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()>{
 
     HttpServer::new(|| {
         App::new()
-            .route("/", web::get().to(welcome))
-            .route("/{name}", web::get().to(welcome))
+            .configure(route::init_routes)
+            // .route("/", web::get().to(welcome))
+            // .route("/{name}", web::get().to(welcome))
     })
         .bind("127.0.0.1:8000")?
         .run()

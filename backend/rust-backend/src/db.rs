@@ -18,17 +18,17 @@ pub fn establish_connection() -> PgConnection {
 
 #[derive(Serialize, Deserialize, AsChangeset, Insertable, Queryable)]
 #[table_name = "tasks"]
-pub struct Task {
+pub struct Tasks {
     pub id: i32,
     pub label: String,
     pub date: String,
     pub done: bool,
 }
 
-impl Task {
+impl Tasks {
     pub fn find_all() -> Result<Vec<Self>, Err> {
         let conn = establish_connection();
-        let tasks = tasks::table.load::<Task>(&conn);
+        let tasks = tasks::table.load::<Tasks>(&conn);
         Ok(tasks)
     }
 
@@ -40,7 +40,7 @@ impl Task {
 
     pub fn create(task: model::Task) -> Result<Self, Err> {
         let conn = establish_connection();
-        let task = Task::from(task);
+        let task = Tasks::from(task);
         let task = diesel::insert_into(tasks::table)
             .values(task)
             .get_result(&conn)?;
@@ -64,9 +64,9 @@ impl Task {
     }
 }
 
-impl Task {
-    fn from(task: model::Task) -> Task {
-      Task {
+impl Tasks {
+    fn from(task: model::Task) -> Tasks {
+      Tasks {
           id: task.id,
           label: task.label,
           date: task.date,

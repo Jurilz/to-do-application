@@ -1,8 +1,8 @@
 table! {
     tasks (id) {
         id -> Int4,
-        label -> Varchar,
-        date -> Varchar,
+        label -> Text,
+        date -> Text,
         done -> Bool,
     }
 }

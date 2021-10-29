@@ -1,76 +1,33 @@
 use diesel::pg::PgConnection;
-use diesel::prelude::*;
-use dotenv::dotenv;
+use diesel::r2d2::ConnectionManager;
+use lazy_static::lazy_static;
+use r2d2;
 use std::env;
-use serde::{Deserialize, Serialize};
-use crate::schema::tasks;
-use crate::model;
 
-pub fn establish_connection() -> PgConnection {
-    dotenv().ok();
+use crate::errors::TaskError;
 
-    let database_url = env::var("DATABASE_URL")
-        .expect("DATABASE_URL must be set");
+type Pool = r2d2::Pool<ConnectionManager<PgConnection>>;
+pub type DBConnection = r2d2::PooledConnection<ConnectionManager<PgConnection>>;
 
-    PgConnection::establish(&database_url)
-        .expect(&format!("Error connection to {}", database_url))
+
+// embed_migrations!();
+
+lazy_static! {
+    static ref POOL: Pool = {
+        let db_url = env::var("DATABASE_URL").expect("DATABASE_URL variable not set");
+        let manager = ConnectionManager::<PgConnection>::new(db_url);
+        Pool::new(manager).expect("Failed to creat to db pool")
+    };
 }
 
-#[derive(Serialize, Deserialize, AsChangeset, Insertable, Queryable)]
-#[table_name = "tasks"]
-pub struct Tasks {
-    pub id: i32,
-    pub label: String,
-    pub date: String,
-    pub done: bool,
-}
+// pub fn init() {
+//     // info!("Initializing DB");
+//     lazy_static::initialize(&POOL);
+//     let conn = connection().expect("Failed to get db connection");
+//     embedded_migrations::run(&conn).unwrap();
+// }
 
-impl Tasks {
-    pub fn find_all() -> Result<Vec<Self>, Err> {
-        let conn = establish_connection();
-        let tasks = tasks::table.load::<Tasks>(&conn);
-        Ok(tasks)
-    }
-
-    pub fn find(id: i32) -> Result<Self, Err> {
-        let conn = establish_connection();
-        let task = employees::table.filter(employees::id.eq(id)).first(&conn)?;
-        Ok(task)
-    }
-
-    pub fn create(task: model::Task) -> Result<Self, Err> {
-        let conn = establish_connection();
-        let task = Tasks::from(task);
-        let task = diesel::insert_into(tasks::table)
-            .values(task)
-            .get_result(&conn)?;
-        Ok(task)
-    }
-
-    pub fn update(id: i32, task: model::Task) -> Result<Self, Err> {
-        let conn = establish_connection();
-        let task = diesel::update(tasks::table)
-            .filter(tasks::id.eq(id))
-            .set(task)
-            .get_result(&conn)?;
-        Ok(task)
-    }
-
-    pub fn delete(id: i32) -> Result<usize, Err> {
-        let conn = establish_connection();
-        let result = diesel::delete(tasks::table.filter(tasks::id.eq(id)))
-            .execute(&conn)?;
-        Ok(result)
-    }
-}
-
-impl Tasks {
-    fn from(task: model::Task) -> Tasks {
-      Tasks {
-          id: task.id,
-          label: task.label,
-          date: task.date,
-          done: task.done,
-      }
-    }
+pub fn connection() -> Result<DBConnection, TaskError> {
+    POOL.get()
+        .map_err(|e| TaskError::new(500, format!("Failed getting db connection: {}", e)))
 }

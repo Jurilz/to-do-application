@@ -1,29 +1,33 @@
-mod model;
+#[macro_use]
+extern crate actix_web;
+#[macro_use]
+extern crate diesel;
+#[macro_use]
+extern crate serde_json;
+
+use std::env;
+use actix_web::{App, HttpServer};
+
 mod db;
 mod schema;
+mod errors;
+mod task;
 
-use actix_web::{App, HttpRequest, HttpServer, Responder, web};
-use actix_web::web::route;
-use crate::model::route;
 
-#[actix_web::main]
+#[actix_rt::main]
 async fn main() -> std::io::Result<()>{
 
-    HttpServer::new(|| {
+    dotenv::dotenv().ok();
+    env_logger::init();
+
+    let host = env::var("HOST").expect("HOST variable not set");
+    let port = env::var("PORT").expect("PORT variable not set");
+
+    HttpServer::new(move || {
         App::new()
-            .configure(route::init_routes)
-            // .route("/", web::get().to(welcome))
-            // .route("/{name}", web::get().to(welcome))
+            .configure(task::init_routes)
     })
-        .bind("127.0.0.1:8000")?
+        .bind(format!("{}:{}", host, port))?
         .run()
         .await
-}
-
-async fn welcome(request: HttpRequest) -> impl Responder {
-    let name = request
-        .match_info()
-        .get("name")
-        .unwrap_or("World");
-    format!("Hello {}!", &name)
 }

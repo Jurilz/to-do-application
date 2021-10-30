@@ -37,13 +37,6 @@ impl From<DieselError> for TaskError {
     }
 }
 
-impl From<askama::Error> for TaskError {
-    fn from(error: askama::Error) -> TaskError {
-        match error {
-            err => TaskError::new(500, format!("Render error: {}", err)),
-        }
-    }
-}
 
 impl ResponseError for TaskError {
     fn error_response(&self) -> HttpResponse {

@@ -10,7 +10,7 @@ type Pool = r2d2::Pool<ConnectionManager<PgConnection>>;
 pub type DBConnection = r2d2::PooledConnection<ConnectionManager<PgConnection>>;
 
 
-// embed_migrations!();
+embed_migrations!();
 
 lazy_static! {
     static ref POOL: Pool = {
@@ -20,12 +20,12 @@ lazy_static! {
     };
 }
 
-// pub fn init() {
-//     // info!("Initializing DB");
-//     lazy_static::initialize(&POOL);
-//     let conn = connection().expect("Failed to get db connection");
-//     embedded_migrations::run(&conn).unwrap();
-// }
+pub fn init() {
+    // info!("Initializing DB");
+    lazy_static::initialize(&POOL);
+    let conn = connection().expect("Failed to get db connection");
+    embedded_migrations::run(&conn).unwrap();
+}
 
 pub fn connection() -> Result<DBConnection, TaskError> {
     POOL.get()

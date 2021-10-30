@@ -29,8 +29,8 @@ serde_derive = "1.0"
 
 # diesel for postgres
 diesel = { version = "1.4.4", features = ["postgres", "uuidv07", "r2d2", "chrono"] }
+diesel_migrations = "1.4"
 dotenv = "0.15.0"
 lazy_static = "1.4"
 r2d2 = "0.8"
 env_logger = "0.6"
-askama = "0.10"

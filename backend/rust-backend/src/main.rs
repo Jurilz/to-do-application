@@ -3,7 +3,7 @@ extern crate actix_web;
 #[macro_use]
 extern crate diesel;
 #[macro_use]
-extern crate serde_json;
+extern crate diesel_migrations;
 
 use std::env;
 use actix_web::{App, HttpServer};
@@ -19,6 +19,7 @@ async fn main() -> std::io::Result<()>{
 
     dotenv::dotenv().ok();
     env_logger::init();
+    db::init();
 
     let host = env::var("HOST").expect("HOST variable not set");
     let port = env::var("PORT").expect("PORT variable not set");

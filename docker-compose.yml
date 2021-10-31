@@ -3,14 +3,35 @@ version: '3.2'
 services:
 
   postgres:
-    container_name: postgres-project
+    container_name: postgres
     image: postgres:14-alpine
     restart: unless-stopped
     ports:
       - "5432:5432"
     volumes:
       - /var/lib/postgresql/data
-#      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       PGDATA: /var/lib/postgresql/data
       POSTGRES_PASSWORD: postgres
+    networks:
+      - todo-network
+
+  rust-backend:
+    container_name: rust-backend
+    ports:
+      - "8080:8080"
+    build:
+      context: ./backend/rust-backend
+      dockerfile: ./Dockerfile
+    environment:
+      DATABASE_URL: "postgres://postgres:postgres@postgres/"
+      HOST: 127.0.0.1
+      PORT: 8080
+    networks:
+      - todo-network
+    depends_on:
+      - postgres
+
+
+networks:
+  todo-network:

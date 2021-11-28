@@ -1,4 +1,6 @@
-export interface TodoInterface {
-    todos: TodoInterface[];
+import { TodoInterface } from "./todo-interface";
+
+export interface TodoFormInterface {
+    todos: TodoFormInterface[];
     handleTodoCreate: (todo: TodoInterface) => void;
 }

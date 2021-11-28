@@ -1,3 +1,5 @@
+import * as React from 'react'
+
 import {TodoInterface} from "./todo-interface";
 
 export interface TodoListInterface {

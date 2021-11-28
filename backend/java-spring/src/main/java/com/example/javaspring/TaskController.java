@@ -11,8 +11,12 @@ import java.util.List;
 @RestController
 public class TaskController {
 
-    @Autowired
+//    @Autowired
     private ITaskService taskService;
+
+    public TaskController(ITaskService taskService) {
+        this.taskService = taskService;
+    }
 
     @GetMapping("/tasks/{id}")
     public Task findById(@PathVariable Long id) {

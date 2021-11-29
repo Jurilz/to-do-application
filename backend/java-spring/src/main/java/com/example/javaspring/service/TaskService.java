@@ -3,7 +3,9 @@ package com.example.javaspring.service;
 import com.example.javaspring.model.Task;
 import com.example.javaspring.repository.TaskRepository;
 
+import com.example.javaspring.repository.TaskSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -18,6 +20,16 @@ public class TaskService implements ITaskService{
     @Override
     public List<Task> findAll() {
         return taskRepository.findAll();
+    }
+
+    @Override
+    public List<Task> findTaskByLabel(String label) {
+        return taskRepository.findTaskByLabelContainingIgnoreCase(label);
+    }
+
+    @Override
+    public List<Task> findBySearchCriteria(Specification spec) {
+        return taskRepository.findAll(spec);
     }
 
     @Override

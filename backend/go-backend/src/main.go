@@ -1,9 +1,26 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"main/src/router"
+	"main/src/services"
+	"main/src/utils"
+	"net/http"
+
+	//"github.com/jmoiron/sqlx"
+	//"testing/quick"
 )
 
 func main() {
-	fmt.Println("Hello World")
+	//fmt.Println("Hello World")
+
+
+	db := utils.OpenDBConnection()
+
+	services.SetDB(db)
+
+	var router = router.CreateRouter()
+
+	log.Println("Listening on Port 8080")
+	log.Fatal(http.ListenAndServe(":8080", router))
 }

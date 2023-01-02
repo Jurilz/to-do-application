@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"main/src/keycloak"
 	"main/src/router"
 	"main/src/services"
 	"main/src/utils"
@@ -19,8 +20,8 @@ func main() {
 
 	services.SetDB(db)
 
-	var router = router.CreateRouter()
+	var myRouter = router.CreateRouter(keycloak.NewKeycloak())
 
 	log.Println("Listening on Port 8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe(":8080", myRouter))
 }

@@ -3,6 +3,7 @@ package utils
 import (
 	"database/sql"
 	"fmt"
+	"github.com/go-pg/pg/v10"
 	_ "github.com/lib/pq"
 	"log"
 	//"github.com/jmoiron/sqlx"
@@ -38,4 +39,22 @@ func OpenDBConnection() *sql.DB {
 	log.Println("DB Connection established...")
 
 	return db
+}
+
+func NewDBConn() (con *pg.DB) {
+	address := fmt.Sprintf("%s:%s", "localhost", "5432")
+
+	options := &pg.Options{
+		User:		DB_USER,
+		Password:	DB_PASSWORD,
+		Addr: 		address,
+		Database: 	DB_NAME,
+		PoolSize:   50,
+	}
+
+	con = pg.Connect(options)
+	if con == nil {
+		log.Fatal("cannot connect to postgres")
+	}
+	return
 }

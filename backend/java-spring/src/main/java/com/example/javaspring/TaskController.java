@@ -29,8 +29,8 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<Task> findAll(@RequestParam(value = "label") String label) {
-        if (label.isEmpty()) {
+    public List<Task> findAll(@RequestParam(required = false, value = "label") String label) {
+        if (label == null || label.isEmpty()) {
             return taskService.findAll();
         } else {
             return taskService.findTaskByLabel(label);

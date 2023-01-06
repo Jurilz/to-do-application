@@ -13,7 +13,7 @@ func NewKeycloak() *Keycloak {
 	return &Keycloak{
 		Gocloak:      gocloak.NewClient("http://localhost:8180"),
 		ClientId:     "task-client",
-		ClientSecret: "2T1ZQoZMGonw7kjD1y1bIwAFxj1PWZ8h",
+		ClientSecret: "tP9729gPzNk3N6835oKdzUxMgpq0Q8dz",
 		Realm:        "task-realm",
 	}
 }

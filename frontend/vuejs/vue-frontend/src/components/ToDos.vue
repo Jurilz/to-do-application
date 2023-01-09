@@ -4,7 +4,7 @@
 
     <ul>
       <li v-bind:key="todo.id" v-for="todo in todos">
-        <ToDo v-bind:todo="todo" />
+        <ToDo v-bind:todo="todo" v-on:delete-todo="$emit('delete-todo', todo.id)"/>
       </li>
     </ul>
   </div>
@@ -12,6 +12,7 @@
 
 <script>
 import ToDo from "@/components/ToDo.vue";
+
 export default {
   name: "to-dos",
   components: {
